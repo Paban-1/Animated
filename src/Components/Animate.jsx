@@ -1,41 +1,26 @@
-import React, { useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useEffect, useState } from "react";
 
-gsap.registerPlugin(ScrollTrigger);
-
-const Animate = () => {
-  const boxRef = useRef(null);
+function Animate() {
+  const [offset, setOffset] = useState(0);
 
   useEffect(() => {
-    gsap.to(boxRef.current, {
-      scrollTrigger: {
-        trigger: document.body,   // listen to page scroll
-        start: "top top",
-        end: "+=2000",            // scroll distance
-        scrub: true,              // smooth sync with scroll
-      },
-      width: 400,                 // grow width
-      height: 400,                // grow height
-      ease: "none",
-    });
+    const handleScroll = () => setOffset(window.scrollY);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
-    <div
-      ref={boxRef}
-      style={{
-        width: "100px",
-        height: "100px",
-        borderRadius: "50%",       // makes it a circle
-        backgroundColor: "black",
-        position: "fixed",         // stays in the middle
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
-      }}
-    />
+    <div className="h-[200vh] flex items-center justify-center">
+      <h1
+        style={{
+          transform: `translateY(-${offset * 0.3}px)`
+        }}
+        className="text-4xl font-bold"
+      >
+        Now I go UP, not gym
+      </h1>
+    </div>
   );
-};
+}
 
 export default Animate;
